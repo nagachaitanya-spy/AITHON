@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeCraft - Interactive Programming Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --secondary: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+            --gray-light: #E5E7EB;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            background-color: #F3F4F6;
+            line-height: 1.6;
+        }
+
+        .mono {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(120deg, var(--primary), #818CF8);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* Platform Sections */
+        .platform-sections {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+        }
+
+        /* Code Editor */
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .code-editor, .output-panel {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .editor-header, .output-header {
+            background-color: var(--dark);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .editor-body {
+            padding: 20px;
+            height: 400px;
+        }
+
+        textarea.code-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            background-color: #2D2D2D;
+            color: #F8F8F2;
+            padding: 15px;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .output-body {
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            background-color: #F9FAFB;
+        }
+
+        .analysis-result {
+            margin-bottom: 20px;
+        }
+
+        .analysis-result h4 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .suggestion {
+            background-color: #EDE9FE;
+            padding: 12px 16px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .error {
+            background-color: #FEE2E2;
+            padding: 12px 16px;
+            border-left: 4px solid var(--danger);
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        /* Tutorials Section */
+        .tutorials {
+            background-color: white;
+            padding: 60px 0;
+        }
+
+        .tutorials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .tutorial-card {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .tutorial-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tutorial-image {
+            height: 180px;
+            background-color: #DDD6FE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 3rem;
+        }
+
+        .tutorial-content {
+            padding: 20px;
+        }
+
+        .tutorial-content h3 {
+            margin-bottom: 12px;
+        }
+
+        .tutorial-content p {
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .difficulty.beginner {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+
+        .difficulty.intermediate {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .difficulty.advanced {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+
+        /* Exercises Section */
+        .exercises {
+            padding: 60px 0;
+        }
+
+        .exercise-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .exercise-content {
+            margin-bottom: 30px;
+        }
+
+        .exercise-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column a {
+            color: #D1D5DB;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9CA3AF;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .features, .tutorials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <span>CodeCraft</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#editor">Code Editor</a></li>
+                        <li><a href="#tutorials">Tutorials</a></li>
+                        <li><a href="#exercises">Exercises</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <button class="btn btn-outline">Sign In</button>
+                    <button class="btn btn-primary">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Learn to Code with Interactive Tutorials</h1>
+                <p>Master programming with our comprehensive platform featuring code analysis, error detection, debugging tools, and personalized suggestions.</p>
+                <button class="btn btn-primary">Get Started</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="platform-sections" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Powerful Learning Features</h2>
+                <p>Our platform provides everything you need to learn programming effectively</p>
+            </div>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Code Analysis</h3>
+                    <p>Get detailed analysis of your code with insights on efficiency, best practices, and potential improvements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3>Error Detection</h3>
+                    <p>Identify errors in your code with precise explanations and suggestions for fixing them.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Debugging Tools</h3>
+                    <p>Step through your code execution with our integrated debugging tools to understand how your code works.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Smart Suggestions</h3>
+                    <p>Receive intelligent suggestions to improve your code style, performance, and readability.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3>Exercise Generation</h3>
+                    <p>Practice with automatically generated exercises tailored to your skill level and learning progress.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Interactive Tutorials</h3>
+                    <p>Learn through hands-on coding tutorials with immediate feedback and guidance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Editor Section -->
+    <section class="platform-sections" id="editor">
+        <div class="container">
+            <div class="section-title">
+                <h2>Interactive Code Editor</h2>
+                <p>Write, analyze, and debug your code in real-time with our powerful editor</p>
+            </div>
+            <div class="editor-container">
+                <div class="code-editor">
+                    <div class="editor-header">
+                        <span>JavaScript Editor</span>
+                        <div class="editor-actions">
+                            <button class="btn btn-primary" onclick="analyzeCode()">Analyze</button>
+                            <button class="btn btn-outline" onclick="runCode()">Run</button>
+                        </div>
+                    </div>
+                    <div class="editor-body">
+                        <textarea class="code-input" id="code-input" placeholder="Write your code here...">// Example code
+function calculateSum(a, b) {
+  // This function calculates the sum of two numbers
+  return a + b;
+}
+
+// Test the function
+const result = calculateSum(5, 7);
+console.log("The result is: " + result);
+
+// Another example with potential error
+function multiplyNumbers(x, y) {
+  let product = x * y;
+  return product;
+}</textarea>
+                    </div>
+                </div>
+                <div class="output-panel">
+                    <div class="output-header">
+                        <span>Analysis & Output</span>
+                    </div>
+                    <div class="output-body" id="output">
+                        <p>Click "Analyze" to check your code or "Run" to execute it.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tutorials Section -->
+    <section class="tutorials" id="tutorials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Interactive Tutorials</h2>
+                <p>Learn programming concepts through hands-on, interactive tutorials</p>
+            </div>
+            <div class="tutorials-grid">
+                <div class="tutorial-card">
+                    https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3eee866f-b384-4f4e-afb5-6d3dedd8403a.png
+                    <div class="tutorial-content">
+                        <span class="difficulty beginner">Beginner</span>
+                        <h3>JavaScript Basics</h3>
+                        <p>Learn the fundamentals of JavaScript programming language from scratch.</p>
+                        <button class="btn btn-outline">Start Learning</button>
+                    </div>
+                </div>
+                <div class="tutorial-card">
+                    https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c68a7628-ec26-41ac-9b89-8b06bf7558a8.png
+                    <div class="tutorial-content">
+                        <span class="difficulty intermediate">Intermediate</span>
+                        <h3>Data Structures</h3>
+                        <p>Master essential data structures and algorithms for efficient programming.</p>
+                        <button class="btn btn-outline">Start Learning</button>
+                    </div>
+                </div>
+                <div class="tutorial-card">
+                    https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/4350007e-d983-4f77-b0ac-a87c9f52a6b6.png
+                    <div class="tutorial-content">
+                        <span class="difficulty advanced">Advanced</span>
+                        <h3>Web Development</h3>
+                        <p>Build responsive web applications with modern frameworks and tools.</p>
+                        <button class="btn btn-outline">Start Learning</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercises Section -->
+    <section class="exercises" id="exercises">
+        <div class="container">
+            <div class="section-title">
+                <h2>Practice Exercises</h2>
+                <p>Sharpen your skills with automatically generated coding exercises</p>
+            </div>
+            <div class="exercise-container">
+                <div class="exercise-header">
+                    <div>
+                        <h3>Array Manipulation Challenge</h3>
+                        <span class="difficulty intermediate">Intermediate</span>
+                    </div>
+                    <button class="btn btn-outline" onclick="generateNewExercise()">New Exercise</button>
+                </div>
+                <div class="exercise-content">
+                    <p>Write a function called <span class="mono">filterAndSort</span> that takes an array of numbers and returns a new array with the following conditions:</p>
+                    <ul>
+                        <li>Filter out all numbers that are less than 10</li>
+                        <li>Sort the remaining numbers in descending order</li>
+                        <li>Return the new array</li>
+                    </ul>
+                    <p>Example: Input <span class="mono">[5, 15, 3, 22, 9, 14]</span> should return <span class="mono">[22, 15, 14]</span></p>
+                </div>
+                <div class="exercise-actions">
+                    <button class="btn btn-primary" onclick="checkSolution()">Check Solution</button>
+                    <button class="btn btn-outline" onclick="showSolution()">Show Solution</button>
+                    <button class="btn btn-outline" onclick="resetExercise()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CodeCraft</h3>
+                    <p>Making programming education accessible and effective for everyone.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 CodeCraft. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Function to analyze code
+        function analyzeCode() {
+            const code = document.getElementById('code-input').value;
+            const output = document.getElementById('output');
+            
+            // Clear previous output
+            output.innerHTML = '';
+            
+            // Simulate code analysis
+            output.innerHTML += '<div class="analysis-result"><h4>Code Analysis Results</h4></div>';
+            
+            // Add suggestions and potential errors (simulated)
+            if (code.includes('console.log')) {
+                output.innerHTML += '<div class="suggestion"><strong>Suggestion:</strong> Consider using more descriptive variable names for better code readability.</div>';
+            }
+            
+            if (code.includes('let') && !code.includes('const')) {
+                output.innerHTML += '<div class="suggestion"><strong>Suggestion:</strong> Use const for variables that won\'t be reassigned for better code predictability.</div>';
+            }
+            
+            if (code.includes('function') && code.includes('//')) {
+                output.innerHTML += '<div class="suggestion"><strong>Good practice:</strong> You\'ve included comments in your functions which improves code documentation.</div>';
+            }
+            
+            // Simulate error detection
+            if (code.includes('var')) {
+                output.innerHTML += '<div class="error"><strong>Warning:</strong> Consider using let/const instead of var for block scoping.</div>';
+            }
+            
+            if (code.includes('==')) {
+                output.innerHTML += '<div class="error"><strong>Warning:</strong> Use strict equality (===) instead of loose equality (==) to avoid type coercion issues.</div>';
+            }
+            
+            output.innerHTML += '<div class="suggestion"><strong>Overall:</strong> Your code structure is good. Keep practicing!</div>';
+        }
+        
+        // Function to run code
+        function runCode() {
+            const code = document.getElementById('code-input').value;
+            const output = document.getElementById('output');
+            
+            // Clear previous output
+            output.innerHTML = '';
+            
+            // Try to execute the code
+            try {
+                // Capture console.log output
+                const originalConsoleLog = console.log;
+                let logOutput = '';
+                
+                console.log = function(message) {
+                    logOutput += message + '\n';
+                    originalConsoleLog.apply(console, arguments);
+                };
+                
+                // Execute the code
+                eval(code);
+                
+                // Restore console.log
+                console.log = originalConsoleLog;
+                
+                // Display the output
+                if (logOutput) {
+                    output.innerHTML += '<div class="analysis-result"><h4>Program Output</h4></div>';
+                    output.innerHTML += '<pre>' + logOutput + '</pre>';
+                } else {
+                    output.innerHTML += '<div class="analysis-result"><h4>Program Executed Successfully</h4></div>';
+                    output.innerHTML += '<p>No output generated. Try adding console.log statements to see results.</p>';
+                }
+            } catch (error) {
+                output.innerHTML += '<div class="error"><strong>Runtime Error:</strong> ' + error.message + '</div>';
+            }
+        }
+        
+        // Function to generate a new exercise
+        function generateNewExercise() {
+            alert('Generating a new exercise based on your skill level...');
+        }
+        
+        // Function to check the solution
+        function checkSolution() {
+            alert('Checking your solution for correctness...');
+        }
+        
+        // Function to show the solution
+        function showSolution() {
+            alert('Showing the recommended solution...');
+        }
+        
+        // Function to reset the exercise
+        function resetExercise() {
+            alert('Resetting the exercise...');
+        }
+    </script>
+</body>
+</html>
